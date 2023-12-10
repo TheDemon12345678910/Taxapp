@@ -19,7 +19,7 @@ INSERT INTO TaxApp.TaxiCompanies (companyName, startPrice, kmPrice, minPrice) VA
 INSERT INTO TaxApp.TaxiCompanies (companyName, startPrice, kmPrice, minPrice) VALUES ('MockTaxi', 15, 15, 9);
 INSERT INTO TaxApp.TaxiCompanies (companyName, startPrice, kmPrice, minPrice) VALUES ('DefinitelyNotATaxi', 25, 15 ,9);
 
-
+--the email is uniqe, because there cannot be 2 users with the same email
 create table TaxApp.users (
     id          SERIAL          PRIMARY KEY,
     username    VARCHAR(50)     NOT NULL,

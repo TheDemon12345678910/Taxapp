@@ -39,12 +39,19 @@ WHERE email = @email;
 
     public void Create(int userId, string hash, string salt, string algorithm)
     {
-        const string sql = $@"
-INSERT INTO taxapp.password_hash (user_id, hash, salt, algorithm)
-VALUES (@userId, @hash, @salt, @algorithm)
-";
-        using var connection = _dataSource.OpenConnection();
-        connection.Execute(sql, new { userId, hash, salt, algorithm });
+        try
+        {
+            const string sql = $@"
+                INSERT INTO taxapp.password_hash (user_id, hash, salt, algorithm)
+                VALUES (@userId, @hash, @salt, @algorithm)
+                ";
+            using var connection = _dataSource.OpenConnection();
+            connection.Execute(sql, new { userId, hash, salt, algorithm });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Could not register new user\n" + e.Message);
+        }
     }
 
     public void Update(int userId, string hash, string salt, string algorithm)
