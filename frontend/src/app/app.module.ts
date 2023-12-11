@@ -9,9 +9,9 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {GoogleMapsModule} from "@angular/google-maps";
 import {CommonModule} from "@angular/common";
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
-import {RouterModule, Routes} from "@angular/router";
+import {RouteReuseStrategy, RouterModule, Routes} from "@angular/router";
 import {BrowserModule} from "@angular/platform-browser";
-import {IonicModule} from "@ionic/angular";
+import {IonicModule, IonicRouteStrategy} from "@ionic/angular";
 import { RegisterComponent } from "./register/register.component";
 import { HeaderComponent } from "./header/header.component";
 
@@ -25,7 +25,7 @@ const routes: Routes = [
   declarations: [AppComponent, MapsComponent, HomePage, LoginPage, HeaderComponent, ConfirmPriceComponent, RegisterComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [RouterModule.forRoot(routes), GoogleMapsModule, CommonModule, RouterModule, BrowserModule, IonicModule.forRoot({mode: 'ios'}), HttpClientModule, FormsModule, ReactiveFormsModule],
-  providers: [provideHttpClient(withJsonpSupport())],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy}, provideHttpClient(withJsonpSupport())],
   bootstrap: [AppComponent],
 })
 export class AppModule {

@@ -38,14 +38,14 @@ RETURNING
     public User? GetById(int id)
     {
         const string sql = $@"
-SELECT
-    id as {nameof(User.id)},
-    username as {nameof(User.username)},
-    tlfnumber as {nameof(User.tlfnumber)},
-    email as {nameof(User.email)}
-FROM taxapp.users
-WHERE id = @id;
-";
+            SELECT
+                id as {nameof(User.id)},
+                username as {nameof(User.username)},
+                tlfnumber as {nameof(User.tlfnumber)},
+                email as {nameof(User.email)}
+            FROM taxapp.users
+            WHERE id = @id;
+            ";
         using var connection = _dataSource.OpenConnection();
         return connection.QueryFirstOrDefault<User>(sql, new { id });
     }

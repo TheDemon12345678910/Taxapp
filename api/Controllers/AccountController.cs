@@ -1,4 +1,6 @@
+using api;
 using api.dtoModels;
+using api.filters;
 using Microsoft.AspNetCore.Mvc;
 using service;
 
@@ -42,10 +44,20 @@ public class AccountController: ControllerBase
         };
     }
 
+    /**
+     * Calls the method, to find out, who they are. Using the Session data, the method
+     * returns a person
+     */
+    [RequireAuthentication]
     [HttpGet]
     [Route("/account/whoami")]
     public ResponseDto WhoAmI()
     {
-        throw new NotImplementedException();
+        var data = HttpContext.GetSessionData();
+        var user = _service.Get(data);
+        return new ResponseDto
+        {
+            ResponseData = user
+        };
     }
 }

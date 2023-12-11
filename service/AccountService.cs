@@ -58,4 +58,11 @@ public class AccountService
         _passwordHashRepository.Create(user.id, hash, salt, hashAlgorithm.GetName());
         return user;
     }
+    /**
+     * Returns the user, that is currently logged in and using the program
+     */
+    public User? Get(SessionData data)
+    {
+        return _userRepository.GetById(data.userid);
+    }
 }
