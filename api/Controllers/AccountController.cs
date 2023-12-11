@@ -1,6 +1,7 @@
 using api;
 using api.dtoModels;
 using api.filters;
+using infrastructure.datamodels;
 using Microsoft.AspNetCore.Mvc;
 using service;
 
@@ -23,6 +24,8 @@ public class AccountController: ControllerBase
     public ResponseDto Login([FromBody] LoginDto dto)
     {
         var user = _service.Authenticate(dto.email, dto.password);
+        //Setting the sessionData here
+        HttpContext.SetSessionData(SessionData.FromUser(user));
         return new ResponseDto
         {
             MessageToClient = "Successfully authenticated",

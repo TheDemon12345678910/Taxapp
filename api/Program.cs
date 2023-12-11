@@ -24,6 +24,17 @@ builder.Services.AddSingleton<MailService>();
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 
+builder.Services.AddDistributedMemoryCache();
+//Enable sessions
+builder.Services.AddSession(options =>
+{
+    //Session expired after 4 hours
+    options.IdleTimeout = TimeSpan.FromHours(4);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
 //The project can access this from everywhere.
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<UserRepository>();
@@ -54,6 +65,8 @@ app.UseCors(options =>
         .AllowAnyHeader()
         .AllowCredentials();
 });
+
+app.UseSession();
 
 app.UseHttpsRedirection();
 
