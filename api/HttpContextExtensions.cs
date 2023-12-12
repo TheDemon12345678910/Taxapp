@@ -7,18 +7,13 @@ namespace api;
  */
 public static class HttpContextExtensions
 {
-    public static void SetSessionData(this HttpContext httpContext, SessionData data)
-    {
-        httpContext.Session.SetInt32(SessionData.Keys.UserId, data.userid);
-    }
-
-    public static SessionData? GetSessionData(this HttpContext httpContext)
-    {
-        var userId = httpContext.Session.GetInt32(SessionData.Keys.UserId);
-        if (userId == null) return null;
-        return new SessionData()
+        public static void SetSessionData(this HttpContext httpContext, SessionData data)
         {
-            userid = userId.Value,
-        };
-    }
+            httpContext.Items["data"] = data;
+        }
+
+        public static SessionData? GetSessionData(this HttpContext httpContext)
+        {
+            return httpContext.Items["data"] as SessionData;
+        }
 }

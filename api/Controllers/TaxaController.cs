@@ -12,11 +12,13 @@ public class TaxaController : ControllerBase
     private readonly ILogger<TaxaController> _logger;
     private readonly TaxaService _taxaService;
     private readonly MailService _mailService;
+    private readonly JwtService _jwtService;
 
     public TaxaController(ILogger<TaxaController> logger,
-        TaxaService taxaService, MailService mailService)
+        TaxaService taxaService, MailService mailService, JwtService jwtService)
     {
         _logger = logger;
+        _jwtService = jwtService;
         _taxaService = taxaService;
         _mailService = mailService;
     }
@@ -25,6 +27,9 @@ public class TaxaController : ControllerBase
     [Route("/TaxaApis/GetTaxaPrices/{km},{min},{per}")]
     public List<TaxiDTO> GetTaxaPrices(int km, int min, int per)
     {
+        var header = HttpContext.Request.Headers.Authorization;
+        Console.WriteLine(header.First());
+        _jwtService.ValidateAndDecodeToken(header.First());
         var taxiPricesDto = _taxaService.GetTaxiPrices(km, min, per);
 
 

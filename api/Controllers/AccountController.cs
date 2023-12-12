@@ -13,6 +13,7 @@ namespace Taxapp.Controllers;
 public class AccountController: ControllerBase
 {
     private readonly AccountService _service;
+    private JwtService _jwtService;
 
     public AccountController(AccountService service)
     {
@@ -23,16 +24,16 @@ public class AccountController: ControllerBase
     [Route("/account/login")]
     public ResponseDto Login([FromBody] LoginDto dto)
     {
-        var user = _service.Authenticate(dto.email, dto.password);
-        //Setting the sessionData here
-        HttpContext.SetSessionData(SessionData.FromUser(user));
-        return new ResponseDto
-        {
-            MessageToClient = "Successfully authenticated",
-            ResponseData = user
-        };
-        
+            var user = _service.Authenticate(dto.email, dto.password);
+            //Setting the sessionData here
+            var token = _jwtService.IssueToken(SessionData.FromUser(user!));
+            return new ResponseDto
+            {
+                MessageToClient = "Successfully authenticated",
+                ResponseData = new { token },
+            };
     }
+    
 
     [HttpPost]
     [Route("/account/register")]
@@ -46,6 +47,18 @@ public class AccountController: ControllerBase
             ResponseData = user
         };
     }
+    
+    [Route("/account/logout")]
+    public ResponseDto Logout()
+    {
+        //Clears the session
+        HttpContext.Session.Clear();
+        return new ResponseDto()
+        {
+            MessageToClient = "Successfully logged out"
+        };
+    }
+
 
     /**
      * Calls the method, to find out, who they are. Using the Session data, the method

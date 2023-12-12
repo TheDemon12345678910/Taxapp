@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using api;
+using api.middleware;
 using service;
 using infrastructure;
 using infrastructure.Reposotories;
@@ -21,6 +22,8 @@ builder.Services.AddScoped<TaxaService>();
 builder.Services.AddScoped<TaxaRepository>();
 builder.Services.AddSingleton<HttpClient>();
 builder.Services.AddSingleton<MailService>();
+builder.Services.AddSingleton<JwtOptions>();
+builder.Services.AddSingleton<JwtService>();
 builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 
@@ -40,14 +43,19 @@ builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<PasswordHashRepository>();
 
+builder.Services.AddSwaggerGenWithBearerJWT();
+builder.Services.AddJwtService();
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGenWithBearerJWT();
 
 var app = builder.Build();
 
@@ -58,6 +66,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+/** This is disabled, because we want to use secrity headers instead
 app.UseCors(options =>
 {
     options.SetIsOriginAllowed(origin => true)
@@ -65,6 +75,12 @@ app.UseCors(options =>
         .AllowAnyHeader()
         .AllowCredentials();
 });
+*/
+
+//Security headers.
+app.UseSecurityHeaders();
+
+app.UseMiddleware<JwtBearerHandler>();
 
 app.UseSession();
 
